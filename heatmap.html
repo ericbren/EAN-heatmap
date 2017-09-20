@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Heatmap</title>
+    <style>
+
+        #map {
+            height: 100%;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #floating-panel {
+            position: absolute;
+            top: 10px;
+            left: 10%;
+            z-index: 5;
+            background-color: #fff;
+            padding: 5px;
+            border: 1px solid #999;
+            text-align: center;
+            font-family: 'Roboto','sans-serif';
+            line-height: 30px;
+            padding-left: 10px;
+        }
+        #floating-panel {
+            background-color: #fff;
+            border: 2px solid #000000;
+            left: 10%;
+            padding: 5px;
+            position: absolute;
+            top: 10px;
+            z-index: 5;
+        }
+    </style>
+</head>
+
+<body>
+<div id="floating-panel">
+
+    <button onclick="changeTwitter();">Twitter</button>
+    <button onclick="changeFacebook();">Facebook</button>
+    <button onclick="changeYoutube();">Youtube</button>
+    <input  onclick="clearMap();" type=button value="Clear">
+
+</div>
+<div id="map"></div>
+
+
+
+<script>
+
+    var map, twitterHeatmap, facebookHeatmap, youtubeHeatmap;
+    var opacity = 0.6;
+
+    function initMap() {
+
+        map = new google.maps.Map(document.getElementById('map'), {
+
+            zoom: 4,
+            center: {lat: 37.7755024, lng: -96.5581209},  // contiguous US geo center
+            mapTypeId: 'terrain'
+
+        });
+
+
+        //changeFacebook();
+        //changeTwitter();
+        //changeYoutube();
+    }
+
+
+    function changeTwitter() {
+
+        var twitter = [
+            'rgba(0, 172, 237, 0)',
+            'rgba(29, 202, 255, 1)',
+            'rgba(0, 191, 255, 1)',
+            'rgba(0, 175, 255, 1)', // twitter blue^
+            'rgba(255, 225, 35, 1)',
+            'rgba(255, 211, 34, 1)',
+            'rgba(255, 196, 33, 1)',
+            'rgba(255, 173, 32, 1)',
+            'rgba(255, 158, 32, 1)',
+            'rgba(255, 150, 32, 1)',
+            'rgba(255, 127, 32, 1)',
+            'rgba(127, 0, 63, 1)', //reds
+            'rgba(191, 0, 31, 1)',
+            'rgba(255, 0, 0, 1)'
+        ];
+
+        twitterHeatmap = new google.maps.visualization.HeatmapLayer({
+
+            data: getTwitterPoints(),
+            map: map,
+            radius: 17,
+            opacity: opacity,
+            maxIntensity: 337, // 15% higher than the mean density
+            gradient: twitter
+
+        });
+    }
+
+
+    function changeFacebook() {
+
+        var facebook = [
+            'rgba(95,126,193,0)', // fb blue
+            'rgba(76,112,186,1)',
+            'rgba(66,100,170,1)',
+            'rgba(59,89,152, 1)',
+
+            'rgba(255, 225, 35, 1)',
+            'rgba(255, 211, 34, 1)',
+            'rgba(255, 196, 33, 1)',
+            'rgba(255, 173, 32, 1)',
+            'rgba(255, 158, 32, 1)',
+            'rgba(255, 150, 32, 1)',
+            'rgba(255, 127, 32, 1)',
+            'rgba(127, 0, 63, 1)', //reds
+            'rgba(191, 0, 31, 1)',
+            'rgba(255, 0, 0, 1)'
+        ];
+
+        facebookHeatmap = new google.maps.visualization.HeatmapLayer({
+
+            data: getFacebookPoints(),
+            map: map,
+            radius: 21,
+            opacity: opacity,
+            maxIntensity: 550, // 15% higher than the mean density
+            gradient: facebook
+
+        });
+
+    }
+
+
+    function changeYoutube() {
+
+        var youtube = [
+            'rgba(204,24,30,0)', // reds
+            'rgba(255,39,39,1)',
+
+            'rgba(255, 127, 32, 1)',
+            'rgba(255, 150, 32, 1)',
+            'rgba(255, 158, 32, 1)',
+            'rgba(255, 173, 32, 1)',
+            'rgba(255, 196, 33, 1)',
+            'rgba(255, 211, 34, 1)',
+            'rgba(255, 225, 35, 1)',
+
+            'rgba(104, 20, 0, 1)',
+            'rgba(0, 0, 0, 1)'  // black
+        ];
+
+        youtubeHeatmap = new google.maps.visualization.HeatmapLayer({
+
+            data: getYoutubePoints(),
+            map: map,
+            radius: 19,
+            opacity: opacity,
+            maxIntensity: 552, // 15% higher than the mean density
+            gradient: youtube
+
+        });
+
+    }
+
+
+
+
+
+
+    // Heatmap data - Yacht Rock real
+    function getFacebookPoints() {
+        return [
+
+            {location: new google.maps.LatLng(37.77, -122.41), weight: 120}, // SF
+            {location: new google.maps.LatLng(34.05, -118.24), weight: 275}, // LA
+            {location: new google.maps.LatLng(39.73, -104.99), weight: 80}, // DEN
+            {location: new google.maps.LatLng(42.052344, -87.718259), weight: 193}, // DC
+            {location: new google.maps.LatLng(41.9, -87.99), weight: 298}, // CHI
+            {location: new google.maps.LatLng(30.33, -81.66), weight: 86},
+            {location: new google.maps.LatLng(28.53, -82.46), weight: 81},
+            //{location: new google.maps.LatLng(33.75, -84.39), weight: 5038}, // ATL
+            {location: new google.maps.LatLng(40.711, -74.01), weight: 859}, //NYC
+            //{location: new google.maps.LatLng(33.95, -84.55), weight: 1447},
+            {location: new google.maps.LatLng(40.6782, -73.9442), weight: 466}, // BK
+            {location: new google.maps.LatLng(42.36, -71.06), weight: 132},
+            {location: new google.maps.LatLng(29.76, -95.37), weight: 142},
+            {location: new google.maps.LatLng(30.27, -97.74), weight: 188},
+            {location: new google.maps.LatLng(39.20, -85.92), weight: 86},
+            {location: new google.maps.LatLng(34.10, -84.26), weight: 68},
+            {location: new google.maps.LatLng(32.78, -96.80), weight: 89},
+            {location: new google.maps.LatLng(33.85, -84.22), weight: 72},
+            {location: new google.maps.LatLng(33.97, -84.22), weight: 76}
+        ];
+    }
+
+    // Twitter Heatmap data - Yacht Rock fake data
+    function getTwitterPoints() {
+        return [
+
+            {location: new google.maps.LatLng(41.88, -87.63), weight: 399}, //CHI
+            {location: new google.maps.LatLng(33.38, -84.80), weight: 76},
+            {location: new google.maps.LatLng(40.6882, -73.9442), weight: 466},
+            {location: new google.maps.LatLng(32.78, -96.80), weight: 89},
+            {location: new google.maps.LatLng(33.85, -84.22), weight: 72},
+            {location: new google.maps.LatLng(33.97, -84.22), weight: 76},
+            {location: new google.maps.LatLng(40.717, -74.01), weight: 301} //nyc
+        ];
+    }
+
+
+    // Youtube Heatmap data - Yacht Rock fake data
+    function getYoutubePoints() {
+        return [
+
+            {location: new google.maps.LatLng(33.97, -83.4), weight: 610},
+            {location: new google.maps.LatLng(26.113289, -80.116560), weight: 410},
+            {location: new google.maps.LatLng(36.135933, -115.162416), weight: 500},
+            {location: new google.maps.LatLng(43.682760, -79.553767), weight: 300}
+
+        ];
+    }
+
+    // for coordinates like atlanta that are on top of each other, we have to place them
+    // next to each other so that they are distinguishable. Add 0.06 to the
+    // long coordinate, subtract if you have already added.
+
+
+    function clearMap() {
+
+        facebookHeatmap.setMap(null);
+        youtubeHeatmap.setMap(null);
+        twitterHeatmap.setMap(null);
+
+    }
+
+</script>
+
+
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvi2p3snYdLiqYVS7rHlLHFPZNzyeZy5U&libraries=visualization&callback=initMap">
+</script>
+
+</body>
+</html>
